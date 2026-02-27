@@ -1,32 +1,5 @@
 export { apiClient } from './api';
-
-export {
-  calculateMIA,
-  calculateCOORS,
-  calculateQRS,
-  calculatePNS,
-  calculateOverallRisk,
-  getCountryScore,
-  isTAACountry,
-  isBAAEligible,
-} from './scoring';
-
-export {
-  initDB,
-  saveProduct,
-  saveProducts,
-  getProduct,
-  getAllProducts,
-  deleteProduct,
-  clearAll,
-} from './persistence';
-
-export { generateSeedProducts } from './seedData';
-export type { SeedProduct } from './seedData';
-
-export {
-  runNdcLookup,
-  processPasteData,
-  processUrl,
-} from './claude';
-export type { AgentLogEntry, AgentResult, NdcAgentPhase } from './claude';
+export { startLookup, startPaste, startUrl } from './claude';
+export type { ClaudeAgentOptions } from './claude';
+export { calculateMIA, calculateCOORS, calculateQRS, calculatePNS, calculateOverallRisk } from './scoring';
+export { loadProducts, saveProducts, clearProducts } from './persistence';

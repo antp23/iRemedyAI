@@ -1,14 +1,8 @@
-export { useProductStore, setPersistence } from './productStore';
-export type { ProductStore, ProductPersistence } from './productStore';
+export { useProductStore } from './productStore';
+export type { ProductState } from './productStore';
 
 export { useAgentStore } from './agentStore';
-export type {
-  AgentStore,
-  AgentPhase,
-  AgentExecutionStatus,
-  AgentLogEntry,
-  AgentRequest,
-} from './agentStore';
+export type { AgentState, AgentPhase, AgentRunStatus, AgentLogEntry } from './agentStore';
 
 export { useUIStore } from './uiStore';
-export type { UIStore, ModalState } from './uiStore';
+export type { UIState } from './uiStore';
