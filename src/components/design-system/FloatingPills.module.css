@@ -1,0 +1,31 @@
+@keyframes float {
+  0% {
+    transform: translateY(100%) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pill {
+  position: absolute;
+  bottom: -40px;
+  border-radius: 9999px;
+  opacity: 0;
+  animation: float linear infinite;
+}
