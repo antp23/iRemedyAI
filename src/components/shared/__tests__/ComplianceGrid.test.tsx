@@ -42,7 +42,7 @@ describe('ComplianceGrid', () => {
     render(<ComplianceGrid status={allPassStatus} />);
     const passBadges = screen.getAllByText('Pass');
     expect(passBadges).toHaveLength(3);
-    expect(screen.getByText('Low Risk')).toBeInTheDocument();
+    expect(screen.getByText('Low')).toBeInTheDocument();
   });
 
   it('shows all Fail badges when non-compliant', () => {
@@ -58,7 +58,7 @@ describe('ComplianceGrid', () => {
     const failBadges = screen.getAllByText('Fail');
     expect(passBadges).toHaveLength(2);
     expect(failBadges).toHaveLength(1);
-    expect(screen.getByText('High Risk')).toBeInTheDocument();
+    expect(screen.getByText('High')).toBeInTheDocument();
   });
 
   it('renders risk level badge for moderate risk', () => {
@@ -67,6 +67,6 @@ describe('ComplianceGrid', () => {
       riskLevel: 'moderate',
     };
     render(<ComplianceGrid status={status} />);
-    expect(screen.getByText('Moderate')).toBeInTheDocument();
+    expect(screen.getByText('Medium')).toBeInTheDocument();
   });
 });

@@ -7,7 +7,7 @@ interface ProductCardProps {
   miaScore: number;
   apiSourceCountry: string;
   apiSourceCountryCode: string;
-  baaCompliant: boolean;
+  baaEligible: boolean;
   riskLevel: RiskLevel;
   onClick?: () => void;
   className?: string;
@@ -18,7 +18,7 @@ const ProductCard = ({
   miaScore,
   apiSourceCountry,
   apiSourceCountryCode,
-  baaCompliant,
+  baaEligible,
   riskLevel,
   onClick,
   className = '',
@@ -37,7 +37,7 @@ const ProductCard = ({
       tabIndex={0}
       data-testid="product-card"
     >
-      <ScoreRing score={miaScore} size={48} strokeWidth={3} />
+      <ScoreRing score={miaScore} size={48} />
 
       <div className="min-w-0 flex-1">
         <h3 className="truncate text-sm font-semibold text-navy">
@@ -53,7 +53,7 @@ const ProductCard = ({
       </div>
 
       <div className="flex flex-col items-end gap-1.5">
-        <BadgeBAA compliant={baaCompliant} />
+        <BadgeBAA eligible={baaEligible} />
         <BadgeRisk level={riskLevel} />
       </div>
     </div>

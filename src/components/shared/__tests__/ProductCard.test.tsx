@@ -44,7 +44,7 @@ describe('ProductCard', () => {
     miaScore: 85,
     apiSourceCountry: 'India',
     apiSourceCountryCode: 'IN',
-    baaCompliant: true,
+    baaEligible: true,
     riskLevel: 'low' as const,
   };
 
@@ -71,17 +71,17 @@ describe('ProductCard', () => {
 
   it('displays the BAA badge', () => {
     render(<ProductCard {...defaultProps} />);
-    expect(screen.getByText('BAA Pass')).toBeInTheDocument();
+    expect(screen.getByText('BAA Eligible')).toBeInTheDocument();
   });
 
   it('displays the risk badge', () => {
     render(<ProductCard {...defaultProps} />);
-    expect(screen.getByText('Low Risk')).toBeInTheDocument();
+    expect(screen.getByText('Low')).toBeInTheDocument();
   });
 
-  it('displays the MIA score', () => {
+  it('displays the MIA score ring', () => {
     render(<ProductCard {...defaultProps} />);
-    expect(screen.getByText('85')).toBeInTheDocument();
+    expect(screen.getByRole('meter')).toBeInTheDocument();
   });
 
   it('displays the country flag', () => {
