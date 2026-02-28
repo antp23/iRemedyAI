@@ -33,13 +33,8 @@ const AppShell = () => {
   return (
     <div className="flex min-h-screen" data-testid="app-shell">
       <Sidebar />
-      <main
-        className="flex-1 bg-offWhite"
-        style={{ padding: '24px' }}
-      >
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <Outlet />
-        </div>
+      <main className="flex-1 overflow-auto bg-offWhite">
+        <Outlet />
       </main>
     </div>
   );
