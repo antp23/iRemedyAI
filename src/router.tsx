@@ -7,6 +7,7 @@ import { Appointments } from '@/pages/Appointments';
 import { Profile } from '@/pages/Profile';
 import { Login, Register } from '@/pages/Auth';
 import { NotFound } from '@/pages/NotFound';
+import { GeopoliticalCenter } from '@/pages/GeopoliticalCenter';
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: 'symptoms', element: <SymptomChecker /> },
       { path: 'appointments', element: <Appointments /> },
       { path: 'profile', element: <Profile /> },
+      { path: 'geopolitical', element: <GeopoliticalCenter /> },
     ],
   },
   { path: '/auth/login', element: <Login /> },
