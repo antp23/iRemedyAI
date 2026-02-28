@@ -1,27 +1,33 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { MainLayout } from '@/components/layout';
-import { Home } from '@/pages/Home';
+import { AppShell } from '@/components/layout';
 import { Dashboard } from '@/pages/Dashboard';
-import { SymptomChecker } from '@/pages/SymptomChecker';
-import { Appointments } from '@/pages/Appointments';
-import { Profile } from '@/pages/Profile';
-import { Login, Register } from '@/pages/Auth';
-import { NotFound } from '@/pages/NotFound';
-import { GeopoliticalCenter } from '@/pages/GeopoliticalCenter';
 import { SearchHub } from '@/pages/Search';
+import { ProductList } from '@/pages/ProductDatabase';
+import { ProductDetail } from '@/pages/ProductDetail';
+import { IngestionHub } from '@/pages/DataIngestion';
+import { RiskAnalyzer } from '@/pages/RiskAnalyzer';
+import { GeopoliticalCenter } from '@/pages/GeopoliticalCenter';
+import { ShortageWarning } from '@/pages/ShortageWarning';
+import { BriefingGenerator } from '@/pages/BriefingGenerator';
+import { Procurement } from '@/pages/Procurement';
+import { NotFound } from '@/pages/NotFound';
+import { Login, Register } from '@/pages/Auth';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: <AppShell />,
     children: [
-      { index: true, element: <Home /> },
-      { path: 'dashboard', element: <Dashboard /> },
+      { index: true, element: <Dashboard /> },
       { path: 'search', element: <SearchHub /> },
-      { path: 'symptoms', element: <SymptomChecker /> },
-      { path: 'appointments', element: <Appointments /> },
-      { path: 'profile', element: <Profile /> },
+      { path: 'products', element: <ProductList /> },
+      { path: 'product/:id', element: <ProductDetail /> },
+      { path: 'ingestion', element: <IngestionHub /> },
+      { path: 'risk', element: <RiskAnalyzer /> },
       { path: 'geopolitical', element: <GeopoliticalCenter /> },
+      { path: 'shortages', element: <ShortageWarning /> },
+      { path: 'briefings', element: <BriefingGenerator /> },
+      { path: 'procurement', element: <Procurement /> },
     ],
   },
   { path: '/auth/login', element: <Login /> },
