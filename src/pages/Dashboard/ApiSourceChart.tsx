@@ -1,12 +1,3 @@
-import { Component, type ReactNode } from 'react';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from 'recharts';
 import type { DrugProduct } from '@/types';
 
 interface ApiSourceChartProps {
@@ -79,44 +70,34 @@ const FallbackTable = ({ data }: { data: ChartDataItem[] }) => (
   </div>
 );
 
-/** Error boundary that falls back to the HTML table */
-class ChartErrorBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
-  { hasError: boolean }
-> {
-  state = { hasError: false };
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-  render() {
-    if (this.state.hasError) return this.props.fallback;
-    return this.props.children;
-  }
-}
+/** Simple bar visualization using plain HTML/CSS */
+const CountryBarChart = ({ data }: { data: ChartDataItem[] }) => {
+  const maxCount = Math.max(...data.map((d) => d.count), 1);
 
-const PieChartView = ({ data }: { data: ChartDataItem[] }) => (
-  <div className="mt-4 h-64 overflow-hidden" data-testid="recharts-pie">
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
-        <Pie
-          data={data}
-          dataKey="count"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          outerRadius={80}
-          label={false}
-        >
-          {data.map((entry) => (
-            <Cell key={entry.name} fill={entry.color} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
-    </ResponsiveContainer>
-  </div>
-);
+  return (
+    <div className="mt-4 space-y-2" data-testid="api-source-bars">
+      {data.map((item) => (
+        <div key={item.name} className="flex items-center gap-3">
+          <span className="w-24 shrink-0 truncate text-sm text-navy/70">
+            {item.name}
+          </span>
+          <div className="relative h-6 flex-1 overflow-hidden rounded-full bg-navy/5">
+            <div
+              className="absolute inset-y-0 left-0 rounded-full transition-all"
+              style={{
+                width: `${(item.count / maxCount) * 100}%`,
+                backgroundColor: item.color,
+              }}
+            />
+          </div>
+          <span className="w-8 shrink-0 text-right text-sm font-semibold text-navy">
+            {item.count}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const ApiSourceChart = ({ productsByCountry }: ApiSourceChartProps) => {
   const data = buildChartData(productsByCountry);
@@ -145,15 +126,10 @@ const ApiSourceChart = ({ productsByCountry }: ApiSourceChartProps) => {
       <h2 className="font-heading text-lg font-bold text-navy">
         API Source Country Distribution
       </h2>
-      <ChartErrorBoundary
-        fallback={
-          <div className="mt-4">
-            <FallbackTable data={data} />
-          </div>
-        }
-      >
-        <PieChartView data={data} />
-      </ChartErrorBoundary>
+      <CountryBarChart data={data} />
+      <div className="mt-4">
+        <FallbackTable data={data} />
+      </div>
     </div>
   );
 };

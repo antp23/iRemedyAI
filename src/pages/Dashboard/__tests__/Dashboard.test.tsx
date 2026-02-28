@@ -171,7 +171,9 @@ describe('Dashboard', () => {
     expect(screen.getByText('27')).toBeInTheDocument();
 
     // High risk (critical from store - Schedule I/II): 8
-    expect(screen.getByText('8')).toBeInTheDocument();
+    // "8" appears in stat card, bar chart, and table — use getAllByText
+    const eights = screen.getAllByText('8');
+    expect(eights.length).toBeGreaterThanOrEqual(1);
 
     // Chart and alerts panels exist
     expect(screen.getByTestId('api-source-chart')).toBeInTheDocument();
