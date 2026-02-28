@@ -7,6 +7,7 @@ import { Appointments } from '@/pages/Appointments';
 import { Profile } from '@/pages/Profile';
 import { Login, Register } from '@/pages/Auth';
 import { NotFound } from '@/pages/NotFound';
+import { SearchHub } from '@/pages/Search';
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'dashboard', element: <Dashboard /> },
+      { path: 'search', element: <SearchHub /> },
       { path: 'symptoms', element: <SymptomChecker /> },
       { path: 'appointments', element: <Appointments /> },
       { path: 'profile', element: <Profile /> },
