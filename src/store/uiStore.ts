@@ -1,19 +1,66 @@
 import { create } from 'zustand';
 
-export interface UIState {
-  sidebarOpen: boolean;
-  activeModal: string | null;
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
-  openModal: (modalId: string) => void;
-  closeModal: () => void;
+export interface ModalState {
+  isOpen: boolean;
+  modalId: string | null;
+  data?: Record<string, unknown>;
 }
 
-export const useUIStore = create<UIState>((set) => ({
-  sidebarOpen: false,
-  activeModal: null,
-  toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-  setSidebarOpen: (open) => set({ sidebarOpen: open }),
-  openModal: (modalId) => set({ activeModal: modalId }),
-  closeModal: () => set({ activeModal: null }),
+interface UIState {
+  sidebarCollapsed: boolean;
+  activePage: string;
+  searchQuery: string;
+  selectedProductId: string | null;
+  modalState: ModalState;
+}
+
+interface UIActions {
+  toggleSidebar(): void;
+  setSidebarCollapsed(collapsed: boolean): void;
+  setActivePage(page: string): void;
+  setSearchQuery(query: string): void;
+  selectProduct(productId: string | null): void;
+  openModal(modalId: string, data?: Record<string, unknown>): void;
+  closeModal(): void;
+}
+
+export type UIStore = UIState & UIActions;
+
+export const useUIStore = create<UIStore>((set) => ({
+  sidebarCollapsed: false,
+  activePage: 'dashboard',
+  searchQuery: '',
+  selectedProductId: null,
+  modalState: {
+    isOpen: false,
+    modalId: null,
+  },
+
+  toggleSidebar() {
+    set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed }));
+  },
+
+  setSidebarCollapsed(collapsed: boolean) {
+    set({ sidebarCollapsed: collapsed });
+  },
+
+  setActivePage(page: string) {
+    set({ activePage: page });
+  },
+
+  setSearchQuery(query: string) {
+    set({ searchQuery: query });
+  },
+
+  selectProduct(productId: string | null) {
+    set({ selectedProductId: productId });
+  },
+
+  openModal(modalId: string, data?: Record<string, unknown>) {
+    set({ modalState: { isOpen: true, modalId, data } });
+  },
+
+  closeModal() {
+    set({ modalState: { isOpen: false, modalId: null } });
+  },
 }));

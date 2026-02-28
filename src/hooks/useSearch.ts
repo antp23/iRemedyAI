@@ -6,6 +6,7 @@ const DEBOUNCE_MS = 300;
 
 export function useSearch() {
   const products = useProductStore((s) => s.products);
+  const searchProducts = useProductStore((s) => s.searchProducts);
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -38,16 +39,8 @@ export function useSearch() {
 
   const results: DrugProduct[] = useMemo(() => {
     if (!debouncedQuery.trim()) return [];
-
-    const needle = debouncedQuery.toLowerCase();
-    return products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(needle) ||
-        p.ndc.toLowerCase().includes(needle) ||
-        p.manufacturer.toLowerCase().includes(needle) ||
-        p.category.toLowerCase().includes(needle),
-    );
-  }, [products, debouncedQuery]);
+    return searchProducts(debouncedQuery);
+  }, [products, debouncedQuery, searchProducts]);
 
   const handleSetQuery = useCallback((value: string) => {
     setQuery(value);

@@ -42,10 +42,14 @@ function makeProduct(overrides: Partial<DrugProduct> = {}): DrugProduct {
   };
 }
 
+function resetStore(products: DrugProduct[] = []) {
+  useProductStore.setState({ products, isLoaded: true, isLoading: false });
+}
+
 describe('useSearch', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    useProductStore.getState().setProducts([]);
+    resetStore();
   });
 
   afterEach(() => {
@@ -78,7 +82,7 @@ describe('useSearch', () => {
   it('matches products by name', () => {
     const aspirin = makeProduct({ name: 'Aspirin 100mg' });
     const ibuprofen = makeProduct({ name: 'Ibuprofen 200mg' });
-    useProductStore.getState().setProducts([aspirin, ibuprofen]);
+    resetStore([aspirin, ibuprofen]);
 
     const { result } = renderHook(() => useSearch());
 
@@ -96,7 +100,7 @@ describe('useSearch', () => {
 
   it('matches products by NDC code', () => {
     const product = makeProduct({ ndc: '1234-5678-90' });
-    useProductStore.getState().setProducts([product]);
+    resetStore([product]);
 
     const { result } = renderHook(() => useSearch());
 
@@ -113,7 +117,7 @@ describe('useSearch', () => {
 
   it('matches products by manufacturer', () => {
     const product = makeProduct({ manufacturer: 'Pfizer Inc' });
-    useProductStore.getState().setProducts([product]);
+    resetStore([product]);
 
     const { result } = renderHook(() => useSearch());
 
@@ -128,14 +132,14 @@ describe('useSearch', () => {
     expect(result.current.results).toHaveLength(1);
   });
 
-  it('matches products by category (therapeutic class)', () => {
-    const product = makeProduct({ category: 'cardiovascular' });
-    useProductStore.getState().setProducts([product]);
+  it('matches products by description', () => {
+    const product = makeProduct({ description: 'Cardiovascular treatment for hypertension' });
+    resetStore([product]);
 
     const { result } = renderHook(() => useSearch());
 
     act(() => {
-      result.current.setQuery('cardio');
+      result.current.setQuery('cardiovascular');
     });
 
     act(() => {
@@ -147,7 +151,7 @@ describe('useSearch', () => {
 
   it('is case-insensitive', () => {
     const product = makeProduct({ name: 'Aspirin' });
-    useProductStore.getState().setProducts([product]);
+    resetStore([product]);
 
     const { result } = renderHook(() => useSearch());
 
@@ -164,7 +168,7 @@ describe('useSearch', () => {
 
   it('clears results when query is emptied', () => {
     const product = makeProduct({ name: 'Aspirin' });
-    useProductStore.getState().setProducts([product]);
+    resetStore([product]);
 
     const { result } = renderHook(() => useSearch());
 

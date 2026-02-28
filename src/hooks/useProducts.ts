@@ -1,7 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import { useProductStore } from '@/store';
-import { saveProducts } from '@/services/persistence';
-import type { DrugProduct } from '@/types';
+import type { DrugProduct, RiskLevel } from '@/types';
 
 export function useProducts() {
   const products = useProductStore((s) => s.products);
@@ -11,9 +10,6 @@ export function useProducts() {
   const addProduct = useCallback(
     (product: DrugProduct) => {
       storeAddProduct(product);
-      // Persist after adding — read latest state from store
-      const updated = useProductStore.getState().products;
-      saveProducts([...updated, product]);
     },
     [storeAddProduct],
   );
@@ -21,42 +17,36 @@ export function useProducts() {
   const removeProduct = useCallback(
     (id: string) => {
       storeRemoveProduct(id);
-      const updated = useProductStore.getState().products;
-      saveProducts(updated.filter((p) => p.id !== id));
     },
     [storeRemoveProduct],
   );
 
   const getById = useCallback(
     (id: string): DrugProduct | undefined => {
-      return products.find((p) => p.id === id);
+      return useProductStore.getState().getProductById(id);
     },
-    [products],
+    [],
   );
 
   const baaEligible = useMemo(
-    () => products.filter((p) => p.productType === 'prescription' && p.isAvailable),
+    () => useProductStore.getState().getBAAEligible(),
     [products],
   );
 
   const highRisk = useMemo(
-    () => products.filter((p) => p.isControlled || p.interactions.length > 0),
+    () => useProductStore.getState().getProductsByRisk('critical' as RiskLevel),
     [products],
   );
 
-  const averageMIA = useMemo(() => {
-    if (products.length === 0) return 0;
-    const totalInteractions = products.reduce(
-      (sum, p) => sum + p.interactions.length,
-      0,
-    );
-    return totalInteractions / products.length;
-  }, [products]);
+  const averageMIA = useMemo(
+    () => useProductStore.getState().getAverageMIA(),
+    [products],
+  );
 
   const productsByCountry = useMemo(() => {
     const map = new Map<string, DrugProduct[]>();
     for (const product of products) {
-      const country = product.labelerName || 'Unknown';
+      const country = product.manufacturer || 'Unknown';
       const existing = map.get(country) ?? [];
       existing.push(product);
       map.set(country, existing);

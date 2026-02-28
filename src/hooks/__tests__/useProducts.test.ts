@@ -42,9 +42,13 @@ function makeProduct(overrides: Partial<DrugProduct> = {}): DrugProduct {
   };
 }
 
+function resetStore(products: DrugProduct[] = []) {
+  useProductStore.setState({ products, isLoaded: true, isLoading: false });
+}
+
 describe('useProducts', () => {
   beforeEach(() => {
-    useProductStore.getState().setProducts([]);
+    resetStore();
   });
 
   it('returns empty defaults when store is empty', () => {
@@ -72,8 +76,7 @@ describe('useProducts', () => {
   it('removes a product from the store', () => {
     const p1 = makeProduct({ id: 'p1' });
     const p2 = makeProduct({ id: 'p2' });
-
-    useProductStore.getState().setProducts([p1, p2]);
+    resetStore([p1, p2]);
 
     const { result } = renderHook(() => useProducts());
     expect(result.current.products).toHaveLength(2);
@@ -89,8 +92,7 @@ describe('useProducts', () => {
   it('getById returns the correct product', () => {
     const p1 = makeProduct({ id: 'p1', name: 'Aspirin' });
     const p2 = makeProduct({ id: 'p2', name: 'Ibuprofen' });
-
-    useProductStore.getState().setProducts([p1, p2]);
+    resetStore([p1, p2]);
 
     const { result } = renderHook(() => useProducts());
 
@@ -99,33 +101,29 @@ describe('useProducts', () => {
     expect(result.current.getById('nonexistent')).toBeUndefined();
   });
 
-  it('computes baaEligible (prescription + available)', () => {
-    const eligible = makeProduct({ productType: 'prescription', isAvailable: true });
-    const otc = makeProduct({ productType: 'otc', isAvailable: true });
-    const unavailable = makeProduct({ productType: 'prescription', isAvailable: false });
-
-    useProductStore.getState().setProducts([eligible, otc, unavailable]);
+  it('computes baaEligible (requiresPrescription + available)', () => {
+    const eligible = makeProduct({ requiresPrescription: true, isAvailable: true });
+    const otc = makeProduct({ requiresPrescription: false, isAvailable: true });
+    const unavailable = makeProduct({ requiresPrescription: true, isAvailable: false });
+    resetStore([eligible, otc, unavailable]);
 
     const { result } = renderHook(() => useProducts());
     expect(result.current.baaEligible).toHaveLength(1);
     expect(result.current.baaEligible[0].id).toBe(eligible.id);
   });
 
-  it('computes highRisk (controlled or has interactions)', () => {
-    const controlled = makeProduct({ isControlled: true });
-    const hasInteractions = makeProduct({
-      isControlled: false,
-      interactions: [{ drugName: 'X', severity: 'major', description: 'test' }],
-    });
-    const safe = makeProduct({ isControlled: false, interactions: [] });
-
-    useProductStore.getState().setProducts([controlled, hasInteractions, safe]);
+  it('computes highRisk from DEA schedule I/II products', () => {
+    const scheduleI = makeProduct({ schedule: 'I' });
+    const scheduleII = makeProduct({ schedule: 'II' });
+    const scheduleIV = makeProduct({ schedule: 'IV' });
+    const unscheduled = makeProduct({ schedule: 'unscheduled' });
+    resetStore([scheduleI, scheduleII, scheduleIV, unscheduled]);
 
     const { result } = renderHook(() => useProducts());
     expect(result.current.highRisk).toHaveLength(2);
   });
 
-  it('computes averageMIA as average interaction count per product', () => {
+  it('computes averageMIA using severity-weighted interaction scores', () => {
     const p1 = makeProduct({
       interactions: [
         { drugName: 'A', severity: 'major', description: '' },
@@ -133,19 +131,18 @@ describe('useProducts', () => {
       ],
     });
     const p2 = makeProduct({ interactions: [] });
-
-    useProductStore.getState().setProducts([p1, p2]);
+    resetStore([p1, p2]);
 
     const { result } = renderHook(() => useProducts());
-    expect(result.current.averageMIA).toBe(1); // (2 + 0) / 2
+    // major=3, minor=1 => total=4, average=4/2=2
+    expect(result.current.averageMIA).toBe(2);
   });
 
-  it('groups productsByCountry using labelerName', () => {
-    const p1 = makeProduct({ labelerName: 'USA Labs' });
-    const p2 = makeProduct({ labelerName: 'USA Labs' });
-    const p3 = makeProduct({ labelerName: 'Canada Pharma' });
-
-    useProductStore.getState().setProducts([p1, p2, p3]);
+  it('groups productsByCountry using manufacturer', () => {
+    const p1 = makeProduct({ manufacturer: 'USA Labs' });
+    const p2 = makeProduct({ manufacturer: 'USA Labs' });
+    const p3 = makeProduct({ manufacturer: 'Canada Pharma' });
+    resetStore([p1, p2, p3]);
 
     const { result } = renderHook(() => useProducts());
     const map = result.current.productsByCountry;
@@ -155,7 +152,7 @@ describe('useProducts', () => {
 
   it('memoizes derived values when products do not change', () => {
     const p1 = makeProduct();
-    useProductStore.getState().setProducts([p1]);
+    resetStore([p1]);
 
     const { result, rerender } = renderHook(() => useProducts());
     const firstBaaEligible = result.current.baaEligible;
