@@ -10,6 +10,10 @@ import { GeopoliticalCenter } from '@/pages/GeopoliticalCenter';
 import { ShortageWarning } from '@/pages/ShortageWarning';
 import { BriefingGenerator } from '@/pages/BriefingGenerator';
 import { Procurement } from '@/pages/Procurement';
+import { Appointments } from '@/pages/Appointments';
+import { Home } from '@/pages/Home';
+import { Profile } from '@/pages/Profile';
+import { SymptomChecker } from '@/pages/SymptomChecker';
 import { NotFound } from '@/pages/NotFound';
 import { Login, Register } from '@/pages/Auth';
 
@@ -28,6 +32,10 @@ export const router = createBrowserRouter([
       { path: 'shortages', element: <ShortageWarning /> },
       { path: 'briefings', element: <BriefingGenerator /> },
       { path: 'procurement', element: <Procurement /> },
+      { path: 'appointments', element: <Appointments /> },
+      { path: 'home', element: <Home /> },
+      { path: 'profile', element: <Profile /> },
+      { path: 'symptom-checker', element: <SymptomChecker /> },
     ],
   },
   { path: '/auth/login', element: <Login /> },
