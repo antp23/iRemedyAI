@@ -90,10 +90,10 @@ describe('Sidebar navigation', () => {
       expect(screen.getByTestId('sidebar')).toBeInTheDocument();
     });
 
-    // All 9 visible nav items should be in the sidebar (ProductDetail is hidden)
+    // All 10 visible nav items should be in the sidebar (ProductDetail is hidden)
     const sidebar = screen.getByTestId('sidebar');
     const links = sidebar.querySelectorAll('a');
-    expect(links.length).toBe(9);
+    expect(links.length).toBe(10);
   });
 
   it('navigates to a different route when clicking a sidebar link', async () => {
