@@ -95,7 +95,7 @@ class ChartErrorBoundary extends Component<
 }
 
 const PieChartView = ({ data }: { data: ChartDataItem[] }) => (
-  <div className="mt-4 h-64" data-testid="recharts-pie">
+  <div className="mt-4 h-64 overflow-hidden" data-testid="recharts-pie">
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
@@ -105,9 +105,7 @@ const PieChartView = ({ data }: { data: ChartDataItem[] }) => (
           cx="50%"
           cy="50%"
           outerRadius={80}
-          label={({ name, value }: { name?: string; value?: number }) =>
-            `${name ?? ''} (${value ?? 0})`
-          }
+          label={false}
         >
           {data.map((entry) => (
             <Cell key={entry.name} fill={entry.color} />
