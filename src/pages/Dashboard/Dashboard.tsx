@@ -16,7 +16,7 @@ const Dashboard = () => {
   const hasProducts = products.length > 0;
 
   return (
-    <div className="min-h-screen bg-offWhite">
+    <div>
       {/* Hero Banner */}
       <section
         className="relative overflow-hidden bg-navy px-6 py-12 md:px-12 md:py-16"
@@ -27,7 +27,7 @@ const Dashboard = () => {
           className="pointer-events-none absolute inset-0 opacity-20"
         />
 
-        <div className="relative mx-auto flex max-w-7xl flex-col items-center gap-8 md:flex-row md:justify-between">
+        <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-8 md:flex-row md:justify-between">
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <div className="flex items-center gap-3">
               <EagleIcon size={56} className="text-gold" />
@@ -49,7 +49,7 @@ const Dashboard = () => {
       <GradientDivider />
 
       {/* Main Content */}
-      <div className="mx-auto max-w-7xl px-6 py-8 md:px-12">
+      <div className="mx-auto max-w-5xl px-6 py-8 md:px-12">
         {/* Stat Cards */}
         <DashboardStats
           products={products}
